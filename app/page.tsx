@@ -9,6 +9,7 @@ import { InsteadActiveWork } from "@/components/instead/active-work"
 import { InsteadClientView } from "@/components/instead/client-view"
 import { InsteadWorkflowView } from "@/components/instead/workflow-view"
 import { InsteadDesignSystemView } from "@/components/instead/design-system-view"
+import { InsteadPresentationView } from "@/components/instead/presentation-view"
 import { InsteadViewAllClientsModal } from "@/components/instead/view-all-clients-modal"
 import { 
   MOCK_CLIENTS, 
@@ -21,7 +22,7 @@ import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export default function HomeWorkspace() {
-  const [activeTab, setActiveTab] = useState<'home' | 'client' | 'workflow' | 'design-system'>('home')
+  const [activeTab, setActiveTab] = useState<'home' | 'client' | 'workflow' | 'design-system' | 'presentation'>('home')
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null)
   const [selectedWorkflowId, setSelectedWorkflowId] = useState<string | null>(null)
   const [isAllClientsOpen, setIsAllClientsOpen] = useState(false)
@@ -61,6 +62,12 @@ export default function HomeWorkspace() {
 
   const handleSelectDesignSystem = () => {
     setActiveTab('design-system')
+    setSelectedClientId(null)
+    setSelectedWorkflowId(null)
+  }
+
+  const handleSelectPresentation = () => {
+    setActiveTab('presentation')
     setSelectedClientId(null)
     setSelectedWorkflowId(null)
   }
@@ -159,7 +166,7 @@ export default function HomeWorkspace() {
           workflows={MOCK_WORKFLOWS}
           selectedClientId={selectedClientId}
           selectedWorkflowId={selectedWorkflowId}
-          activeTab={activeTab === 'design-system' ? 'home' : activeTab}
+          activeTab={activeTab === 'design-system' || activeTab === 'presentation' ? 'home' : activeTab}
           onSelectHome={handleSelectHome}
           onSelectClient={handleSelectClient}
           onSelectWorkflow={handleSelectWorkflow}
@@ -180,6 +187,7 @@ export default function HomeWorkspace() {
             onSelectClient={handleSelectClient}
             onSelectWorkflow={handleSelectWorkflow}
             onSelectDesignSystem={handleSelectDesignSystem}
+            onSelectPresentation={handleSelectPresentation}
             onOpenSearch={() => setIsAllClientsOpen(true)}
           />
 
@@ -392,6 +400,17 @@ export default function HomeWorkspace() {
             {activeTab === 'design-system' && (
               <div className="transition-opacity duration-200 ease-out">
                 <InsteadDesignSystemView onBackToHome={handleSelectHome} />
+              </div>
+            )}
+
+            {/* STATE 5: PRESENTATION CASE STUDY BOARD */}
+            {activeTab === 'presentation' && (
+              <div className="transition-opacity duration-200 ease-out">
+                <InsteadPresentationView onSelectScreen={(sc) => {
+                  if (sc === 'client') handleSelectClient('c-krishan')
+                  else if (sc === 'workflow') handleSelectWorkflow('wf-q3-estimates')
+                  else handleSelectHome()
+                }} />
               </div>
             )}
           </main>

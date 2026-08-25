@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils"
 
 interface HeaderProps {
-  activeTab: 'home' | 'client' | 'workflow' | 'design-system'
+  activeTab: 'home' | 'client' | 'workflow' | 'design-system' | 'presentation'
   clientName?: string
   entityType?: string
   workflowTitle?: string
@@ -18,6 +18,7 @@ interface HeaderProps {
   onSelectClient: (id: string) => void
   onSelectWorkflow: (id: string) => void
   onSelectDesignSystem?: () => void
+  onSelectPresentation?: () => void
   onOpenSearch?: () => void
 }
 
@@ -30,6 +31,7 @@ export function InsteadHeader({
   onSelectClient,
   onSelectWorkflow,
   onSelectDesignSystem,
+  onSelectPresentation,
   onOpenSearch
 }: HeaderProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -125,7 +127,28 @@ export function InsteadHeader({
                 )}
               </button>
 
-              {/* Option 4: Design System Foundations */}
+              {/* Option 4: Presentation Board */}
+              {onSelectPresentation && (
+                <button
+                  onClick={() => {
+                    onSelectPresentation()
+                    setIsDropdownOpen(false)
+                  }}
+                  className={cn(
+                    "w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors duration-150 pt-1 border-t border-[#F0EEE6]",
+                    activeTab === 'presentation'
+                      ? "bg-[#FAF9F5] text-[#24282C] font-medium"
+                      : "hover:bg-[#FAF9F5] text-[#555C66]"
+                  )}
+                >
+                  <span className="truncate">Presentation Case Study Board</span>
+                  {activeTab === 'presentation' && (
+                    <span className="w-2 h-2 rounded-full bg-[#C2EF72] border border-[#24282C]/20 shrink-0 ml-1" />
+                  )}
+                </button>
+              )}
+
+              {/* Option 5: Design System Foundations */}
               {onSelectDesignSystem && (
                 <button
                   onClick={() => {
@@ -133,7 +156,7 @@ export function InsteadHeader({
                     setIsDropdownOpen(false)
                   }}
                   className={cn(
-                    "w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors duration-150 pt-1 border-t border-[#F0EEE6]",
+                    "w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors duration-150",
                     activeTab === 'design-system'
                       ? "bg-[#FAF9F5] text-[#24282C] font-medium"
                       : "hover:bg-[#FAF9F5] text-[#555C66]"
@@ -186,6 +209,22 @@ export function InsteadHeader({
             <ChevronRight className="w-3.5 h-3.5 text-[#A3A8B0]" />
             <div className="flex items-center gap-1.5 text-[#24282C] font-normal">
               <span className="max-w-[240px] truncate">{workflowTitle}</span>
+              <button 
+                onClick={onSelectHome}
+                className="hover:text-[#24282C] ml-1 transition-colors duration-150"
+                title="Return to Home"
+              >
+                <X className="w-3 h-3 text-[#717882]" />
+              </button>
+            </div>
+          </>
+        )}
+
+        {activeTab === 'presentation' && (
+          <>
+            <ChevronRight className="w-3.5 h-3.5 text-[#A3A8B0]" />
+            <div className="flex items-center gap-1.5 text-[#24282C] font-normal">
+              <span>Presentation Board</span>
               <button 
                 onClick={onSelectHome}
                 className="hover:text-[#24282C] ml-1 transition-colors duration-150"
