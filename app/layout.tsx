@@ -1,14 +1,19 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import { Lato, Libre_Baskerville } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'})
-
-const fontMono = Geist_Mono({
+const lato = Lato({
   subsets: ["latin"],
-  variable: "--font-mono",
+  weight: ["300", "400", "700", "900"],
+  variable: "--font-lato",
+})
+
+const libreBaskerville = Libre_Baskerville({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-baskerville",
 })
 
 export default function RootLayout({
@@ -20,11 +25,12 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", geist.variable)}
+      className={cn("antialiased light", lato.variable, libreBaskerville.variable, "font-sans")}
     >
-      <body>
+      <body className="bg-[#F7F6F0] text-[#24282C] font-sans min-h-screen selection:bg-[#C2EF72] selection:text-[#141618]">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   )
 }
+
