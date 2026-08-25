@@ -95,7 +95,7 @@ export function InsteadClientView({
 
   return (
     <div className="max-w-3xl mx-auto space-y-7 py-2 font-sans text-[#24282C]">
-      {/* 1. Client Identity Header (Libre Baskerville Major Heading) */}
+      {/* 1. Client Identity Header */}
       <div className="space-y-0.5">
         <div className="flex items-baseline gap-2">
           <h1 className="text-3xl md:text-3xl font-serif font-normal text-[#24282C] tracking-tight">
@@ -189,7 +189,7 @@ export function InsteadClientView({
         </div>
       )}
 
-      {/* 3. Small Clear NEXT Action (Section 2) */}
+      {/* 3. Small Clear NEXT BEST ACTION (Section 3) */}
       <section className="space-y-1 pt-1">
         <h2 className="text-[11px] font-semibold uppercase tracking-wider text-[#8A9099]">
           NEXT BEST ACTION
@@ -203,7 +203,7 @@ export function InsteadClientView({
         </button>
       </section>
 
-      {/* 4. Needs Attention */}
+      {/* 4. Needs Attention (Section 3: What to do vs Why) */}
       <section className="space-y-1.5 pt-1">
         <h2 className="text-base font-sans font-semibold text-[#24282C]">
           Needs attention
@@ -216,8 +216,8 @@ export function InsteadClientView({
             <div className="text-[#656B73] font-normal space-y-0.5">
               {isKrishan ? (
                 <>
-                  <p>• W-2</p>
-                  <p>• 1099-INT</p>
+                  <p>• W-2 · Missing</p>
+                  <p>• 1099-INT · Missing</p>
                 </>
               ) : (
                 <p>• Prior year tax voucher verification pending</p>
@@ -234,7 +234,7 @@ export function InsteadClientView({
         </div>
       </section>
 
-      {/* 5. Current Work */}
+      {/* 5. Current Work (Section 1 & 3: 2 of 7 steps complete) */}
       <section className="space-y-2 pt-1">
         <h2 className="text-base font-sans font-semibold text-[#24282C]">
           Current work
@@ -249,7 +249,7 @@ export function InsteadClientView({
               <ArrowRight className="w-3.5 h-3.5 text-[#24282C] group-hover:translate-x-0.5 transition-transform" />
             </button>
             <span className="text-[#656B73]">
-              {isKrishan ? "3 of 7 steps complete" : "4 of 4 steps complete"}
+              {isKrishan ? "2 of 7 steps complete" : "4 of 4 steps complete"}
             </span>
           </div>
 
@@ -261,11 +261,11 @@ export function InsteadClientView({
           <div className="space-y-1 text-xs text-[#656B73] pt-1 pl-1">
             <div className="flex items-center justify-between max-w-sm">
               <span>Client information</span>
-              <span className="text-[#24282C]">Complete</span>
+              <span className="text-[#24282C]">✓ Complete</span>
             </div>
             <div className="flex items-center justify-between max-w-sm">
               <span>Income documents</span>
-              <span className="text-[#24282C]">Complete</span>
+              <span className="text-[#24282C]">✓ Complete</span>
             </div>
             <div className="flex items-center justify-between max-w-sm">
               <span className="text-[#24282C] font-medium">Document review</span>
