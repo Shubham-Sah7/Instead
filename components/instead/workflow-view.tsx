@@ -370,13 +370,16 @@ export function InsteadWorkflowView({
               </div>
             </div>
 
-            <button
-              onClick={() => handleSendMessage("Who needs attention?")}
-              className="text-xs text-[#24282C] font-normal hover:underline pt-2 block inline-flex items-center gap-1 group"
-            >
-              <span>View all 18 clients</span>
-              <ArrowRight className="w-3 h-3 text-[#24282C] group-hover:translate-x-0.5 transition-transform" />
-            </button>
+            <div className="pt-2 flex items-center justify-between text-xs text-[#717882]">
+              <span>Showing 5 of 18 clients</span>
+              <button
+                onClick={() => handleSendMessage("Who needs attention?")}
+                className="text-xs text-[#24282C] font-normal hover:underline inline-flex items-center gap-1 group"
+              >
+                <span>View all 18 clients</span>
+                <ArrowRight className="w-3 h-3 text-[#24282C] group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
           </section>
         </div>
       )}
