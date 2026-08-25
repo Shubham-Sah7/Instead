@@ -8,6 +8,7 @@ import { InsteadNeedsAttention } from "@/components/instead/needs-attention"
 import { InsteadActiveWork } from "@/components/instead/active-work"
 import { InsteadClientView } from "@/components/instead/client-view"
 import { InsteadWorkflowView } from "@/components/instead/workflow-view"
+import { InsteadDesignSystemView } from "@/components/instead/design-system-view"
 import { InsteadViewAllClientsModal } from "@/components/instead/view-all-clients-modal"
 import { 
   MOCK_CLIENTS, 
@@ -20,13 +21,13 @@ import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export default function HomeWorkspace() {
-  const [activeTab, setActiveTab] = useState<'home' | 'client' | 'workflow'>('home')
+  const [activeTab, setActiveTab] = useState<'home' | 'client' | 'workflow' | 'design-system'>('home')
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null)
   const [selectedWorkflowId, setSelectedWorkflowId] = useState<string | null>(null)
   const [isAllClientsOpen, setIsAllClientsOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
-  // Scope State inside Chat (Requirement 1 - 3)
+  // Scope State inside Chat
   const [currentHomeScope, setCurrentHomeScope] = useState<ScopeSelection>({
     type: 'all',
     label: 'All clients'
@@ -58,16 +59,22 @@ export default function HomeWorkspace() {
     setActiveTab('workflow')
   }
 
+  const handleSelectDesignSystem = () => {
+    setActiveTab('design-system')
+    setSelectedClientId(null)
+    setSelectedWorkflowId(null)
+  }
+
   const handleResolveNeedsAttention = (item: NeedsAttentionItem) => {
     handleSelectClient(item.clientId)
   }
 
-  // Handle Chat Scope Selection (Section 1, 2, 3)
+  // Handle Chat Scope Selection
   const handleScopeSelect = (scope: ScopeSelection) => {
     setCurrentHomeScope(scope)
   }
 
-  // 2. Functional Home Chat Query Handler (Context 1)
+  // 2. Functional Home Chat Query Handler
   const handleHomeSendMessage = (query: string) => {
     const userMsg: ChatMessage = {
       id: `u-${Date.now()}`,
@@ -79,14 +86,12 @@ export default function HomeWorkspace() {
     setHomeMessages(prev => [...prev, userMsg])
     setIsThinking(true)
 
-    // 400ms subtle thinking state
     setTimeout(() => {
       let replyText = ""
       let actions: ChatMessage['actions'] = []
 
       const qLower = query.toLowerCase()
 
-      // Dynamic response based on current selected scope
       if (currentHomeScope.type === 'client' && currentHomeScope.id === 'c-krishan') {
         if (qLower.includes("missing") || qLower.includes("document") || qLower.includes("status")) {
           replyText = "Two documents are still missing from Krishan's 2026 return:\n• W-2\n• 1099-INT\n\nThe return preparation workflow is currently waiting on these documents."
@@ -105,9 +110,8 @@ export default function HomeWorkspace() {
           { label: "Open workflow →", type: "workflow", targetId: "wf-q3-estimates" }
         ]
       } else {
-        // Scope = All clients
         if (qLower.includes("attention") || qLower.includes("need") || qLower.includes("today")) {
-          replyText = "3 clients need your attention today:\n\n• Krishan K — Missing W-2 and 1099-INT (Overdue)\n• Acme Holdings LLC — Form 7004 extension due Sep 15\n• Sarah Chen — Return review pending\n\nI can help you follow up with any of them."
+          replyText = "3 clients need your attention today:\n\n• Krishan K — missing W-2 and 1099-INT\n• Acme Holdings — Form 7004 due Sep 15\n• Sarah Chen — review required\n\nI can help you follow up with any of them."
           actions = [
             { label: "View Krishan →", type: "client", targetId: "c-krishan" },
             { label: "View Acme Holdings →", type: "client", targetId: "c-acme" },
@@ -119,7 +123,7 @@ export default function HomeWorkspace() {
             { label: "View Q3 Workflow →", type: "workflow", targetId: "wf-q3-estimates" }
           ]
         } else if (qLower.includes("krishan") || qLower.includes("document")) {
-          replyText = "Krishan K is missing 2 documents for 2026 1040 preparation: W-2 (Stripe Inc) and 1099-INT (First Republic Bank)."
+          replyText = "Krishan K is missing 2 documents for 2026 1040 preparation: W-2 and 1099-INT."
           actions = [
             { label: "View Krishan →", type: "client", targetId: "c-krishan" }
           ]
@@ -155,7 +159,7 @@ export default function HomeWorkspace() {
           workflows={MOCK_WORKFLOWS}
           selectedClientId={selectedClientId}
           selectedWorkflowId={selectedWorkflowId}
-          activeTab={activeTab}
+          activeTab={activeTab === 'design-system' ? 'home' : activeTab}
           onSelectHome={handleSelectHome}
           onSelectClient={handleSelectClient}
           onSelectWorkflow={handleSelectWorkflow}
@@ -175,6 +179,7 @@ export default function HomeWorkspace() {
             onSelectHome={handleSelectHome}
             onSelectClient={handleSelectClient}
             onSelectWorkflow={handleSelectWorkflow}
+            onSelectDesignSystem={handleSelectDesignSystem}
             onOpenSearch={() => setIsAllClientsOpen(true)}
           />
 
@@ -183,7 +188,7 @@ export default function HomeWorkspace() {
             {/* STATE 1: HOME / OVERVIEW */}
             {activeTab === 'home' && (
               <div className="max-w-3xl mx-auto space-y-6 py-2 transition-opacity duration-200 ease-out">
-                {/* Greeting Header — Dynamic based on Scope (Section 2 & 3) */}
+                {/* Greeting Header */}
                 <div className="space-y-0.5">
                   <h1 className="text-xl md:text-2xl font-serif tracking-tight leading-tight">
                     <span className="font-bold text-[#24282C]">Good morning, Shubham. </span>
@@ -200,7 +205,7 @@ export default function HomeWorkspace() {
                   </p>
                 </div>
 
-                {/* Chat Hero Composer with Scope Selector (Section 1) */}
+                {/* Chat Hero Composer */}
                 <InsteadChatComposer
                   onSendMessage={handleHomeSendMessage}
                   currentScope={currentHomeScope}
@@ -296,9 +301,8 @@ export default function HomeWorkspace() {
                   </div>
                 )}
 
-                {/* SCOPE-BASED HOME CONTENT (Section 2 & 3) */}
+                {/* SCOPE-BASED HOME CONTENT */}
                 {currentHomeScope.type === 'client' && currentHomeScope.id === 'c-krishan' ? (
-                  /* Focused Krishan K Scope Summary on Home */
                   <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-2xl p-4 space-y-3 font-sans transition-all duration-200">
                     <div className="flex items-baseline justify-between">
                       <h2 className="text-base font-semibold text-[#24282C]">
@@ -309,7 +313,7 @@ export default function HomeWorkspace() {
 
                     <div className="space-y-1.5 text-xs text-[#656B73]">
                       <p className="text-[14px] text-[#24282C] font-normal">• Missing 2 documents (W-2 & 1099-INT)</p>
-                      <p>• 1040 return in progress (3 of 7 steps complete)</p>
+                      <p>• 1040 return in progress (2 of 7 steps complete)</p>
                       <p>• Next action: request W-2 + 1099-INT</p>
                     </div>
 
@@ -322,7 +326,6 @@ export default function HomeWorkspace() {
                     </button>
                   </div>
                 ) : currentHomeScope.type === 'workflow' && currentHomeScope.id === 'wf-q3-estimates' ? (
-                  /* Focused Q3 Workflow Scope Summary on Home */
                   <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-2xl p-4 space-y-3 font-sans transition-all duration-200">
                     <div className="flex items-baseline justify-between">
                       <h2 className="text-base font-semibold text-[#24282C]">
@@ -345,7 +348,6 @@ export default function HomeWorkspace() {
                     </button>
                   </div>
                 ) : (
-                  /* Default All Clients Scope Content */
                   <>
                     <InsteadNeedsAttention
                       items={MOCK_NEEDS_ATTENTION}
@@ -375,7 +377,7 @@ export default function HomeWorkspace() {
               </div>
             )}
 
-            {/* STATE 3 & 4: WORKFLOW VIEW STATE */}
+            {/* STATE 3: WORKFLOW VIEW STATE */}
             {activeTab === 'workflow' && selectedWorkflow && (
               <div className="transition-opacity duration-200 ease-out">
                 <InsteadWorkflowView
@@ -385,10 +387,16 @@ export default function HomeWorkspace() {
                 />
               </div>
             )}
+
+            {/* STATE 4: DESIGN SYSTEM FOUNDATIONS */}
+            {activeTab === 'design-system' && (
+              <div className="transition-opacity duration-200 ease-out">
+                <InsteadDesignSystemView onBackToHome={handleSelectHome} />
+              </div>
+            )}
           </main>
         </div>
       </div>
-
 
       {/* Directory Modal */}
       <InsteadViewAllClientsModal
