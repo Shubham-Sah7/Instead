@@ -192,7 +192,7 @@ export function InsteadClientView({
       {/* 3. Small Clear NEXT Action (Section 2) */}
       <section className="space-y-1 pt-1">
         <h2 className="text-[11px] font-semibold uppercase tracking-wider text-[#8A9099]">
-          NEXT
+          NEXT BEST ACTION
         </h2>
         <button
           onClick={() => handleSendMessage("Draft a follow-up for the missing documents")}
